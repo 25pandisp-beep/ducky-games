@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ducky Games">
+  <meta name="theme-color" content="#0a0b18">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  <title>Ducky Games</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%;
+      background: #0a0b18;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    #splash {
+      position: fixed; inset: 0;
+      background: #0a0b18;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 16px; z-index: 99999;
+      transition: opacity 0.5s ease;
+    }
+    #splash-duck { font-size: 72px; }
+    #splash-title {
+      font-size: 28px; font-weight: 900;
+      color: #fff; letter-spacing: 0.05em;
+      font-family: sans-serif;
+    }
+    #splash-sub {
+      font-size: 13px; color: rgba(255,255,255,0.35);
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<div id="splash">
+  <div id="splash-duck">🦆</div>
+  <div id="splash-title">DUCKY GAMES</div>
+  <div id="splash-sub">Loading…</div>
+</div>
+
+<script>
+// Register service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(function(err) {
+    console.log('SW registration failed:', err);
+  });
+}
+
+// Load the game script then hide splash
+var script = document.createElement('script');
+script.src = 'game.js';
+script.onload = function() {
+  var splash = document.getElementById('splash');
+  splash.style.opacity = '0';
+  setTimeout(function() { splash.style.display = 'none'; }, 500);
+};
+script.onerror = function() {
+  document.getElementById('splash-sub').textContent = 'Failed to load. Try refreshing.';
+};
+document.body.appendChild(script);
+</script>
+
+</body>
+</html>
